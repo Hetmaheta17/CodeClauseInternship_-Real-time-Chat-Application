@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static tailwind_tags %}
+{% block content %}
+{% tailwind_css %}
+<div class="max-w-2xl mx-auto p-6 bg-gray-100 rounded-lg shadow-md mt-10">
+    <h2 class="text-3xl font-extrabold text-gray-900 text-center mb-4">Chat Room: <span class="text-blue-500">{{ room_name }}</span></h2>
+
+    <div id="chat-box" class="border border-gray-300 rounded-lg bg-white p-4 overflow-y-auto" style="height: 400px;">
+        {% for message in messages %}
+            <div class="mb-3 flex items-start">
+                <div class="mr-2">
+                    <strong class="text-blue-600">{{ message.user.username }}</strong>
+                    <span class="text-xs text-gray-500 ml-2">{{ message.timestamp|date:"H:i" }}</span>
+                </div>
+                <p class="bg-gray-200 rounded-lg px-4 py-2 text-gray-800">{{ message.content }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="mt-4 flex items-center gap-2">
+        <input id="message-input" type="text" class="border border-gray-300 rounded-lg p-3 flex-1 focus:ring-2 focus:ring-blue-400" placeholder="Type your message...">
+        <button id="send-button" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg px-6 py-3 transition duration-300 ease-in-out">
+            Send
+        </button>
+    </div>
+</div>
+
+<script>
+    const roomName = "{{ room_name }}";
+    const chatSocket = new WebSocket(`ws://${window.location.host}/ws/chat/${roomName}/`);
+
+    chatSocket.onopen = function() {
+        console.log("WebSocket connection established.");
+    };
+
+    chatSocket.onerror = function(error) {
+        console.error("WebSocket Error:", error);
+    };
+
+    chatSocket.onclose = function(e) {
+        console.log("WebSocket connection closed. Attempting to reconnect...");
+    };
+
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        const chatBox = document.querySelector("#chat-box");
+
+        const newMessage = `
+            <div class="mb-3 flex items-start">
+                <div class="mr-2">
+                    <strong class="text-blue-600">${data.username || 'Anonymous'}</strong>
+                    <span class="text-xs text-gray-500 ml-2">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                </div>
+                <p class="bg-gray-200 rounded-lg px-4 py-2 text-gray-800">${data.message}</p>
+            </div>`;
+
+        chatBox.innerHTML += newMessage;
+        chatBox.scrollTop = chatBox.scrollHeight;
+    };
+
+    document.querySelector("#send-button").onclick = function() {
+        sendMessage();
+    };
+
+    document.querySelector("#message-input").addEventListener("keypress", function(e) {
+        if (e.key === "Enter") sendMessage();
+    });
+
+    function sendMessage() {
+        const messageInput = document.querySelector("#message-input");
+        if (messageInput.value.trim()) {
+            if (chatSocket.readyState === WebSocket.OPEN) {
+                chatSocket.send(JSON.stringify({ 'message': messageInput.value }));
+                messageInput.value = '';
+            } else {
+                console.error("WebSocket is not connected.");
+            }
+        }
+    }
+
+    window.addEventListener("beforeunload", function() {
+        if (chatSocket.readyState === WebSocket.OPEN) {
+            chatSocket.close();
+        }
+    });
+</script>
+{% endblock %}

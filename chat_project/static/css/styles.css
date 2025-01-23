@@ -1,0 +1,70 @@
+/* CSS Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Root Variables */
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --background-color: #ffffff;
+    --text-color: #333333;
+    --font-main: 'Arial', sans-serif;
+    --spacing-unit: 1rem;
+}
+
+/* Base Styles */
+html {
+    font-size: 16px;
+    line-height: 1.5;
+    font-family: var(--font-main);
+    color: var(--text-color);
+    background-color: var(--background-color);
+}
+
+body {
+    min-height: 100vh;
+    padding: var(--spacing-unit);
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    margin-bottom: var(--spacing-unit);
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+p {
+    margin-bottom: var(--spacing-unit);
+}
+
+/* Links */
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Utility Classes */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-unit);
+}
+
+.text-center {
+    text-align: center;
+}
+
+.mt-1 { margin-top: var(--spacing-unit); }
+.mb-1 { margin-bottom: var(--spacing-unit); }
+.ml-1 { margin-left: var(--spacing-unit); }
+.mr-1 { margin-right: var(--spacing-unit); }
+

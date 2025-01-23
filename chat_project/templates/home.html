@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto text-center mt-10">
+    <h1 class="text-4xl font-bold text-gray-800">Welcome to the Real-Time Chat App</h1>
+    <p class="mt-4 text-lg text-gray-600">Join a chat room and start communicating in real time!</p>
+
+    <form action="" method="get" class="mt-6" onsubmit="redirectToChatRoom(event)">
+        <input 
+            type="text" 
+            id="room_name_input" 
+            placeholder="Enter room name..." 
+            class="border p-3 rounded w-full text-lg"
+            required
+        />
+        <button 
+            type="submit" 
+            class="mt-4 bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600"
+        >
+            Join Room
+        </button>
+    </form>
+</div>
+
+<script>
+    function redirectToChatRoom(event) {
+        event.preventDefault();
+        let roomName = document.getElementById('room_name_input').value;
+        if (roomName) {
+            window.location.href = `/chat/${roomName}/`;
+        }
+    }
+</script>
+{% endblock %}
