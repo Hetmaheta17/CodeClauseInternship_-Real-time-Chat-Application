@@ -116,7 +116,5 @@ Email: hetmaheta17@gmail.com
 
 GitHub: Hetmaheta17
 
-Website: yourwebsite.com
-
 Enjoy chatting with Live Chat Application! 🚀
 
